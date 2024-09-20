@@ -7,43 +7,35 @@
     :class="{
       'VueCarousel-slide-active': isActive,
       'VueCarousel-slide-center': isCenter,
-      'VueCarousel-slide-adjustableHeight': isAdjustableHeight
+      'VueCarousel-slide-adjustableHeight': isAdjustableHeight,
     }"
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
 <script>
 export default {
   name: "slide",
+  inject: ["carousel"],
   props: ["title"],
+emits: ['slideclick', 'slide-click'],
   data() {
     return {
-      width: null
+      width: null,
     };
   },
-  inject: ["carousel"],
-  mounted() {
-    if (!this.$isServer) {
-      this.$el.addEventListener("dragstart", e => e.preventDefault());
-    }
 
-    this.$el.addEventListener(
-      this.carousel.isTouch ? "touchend" : "mouseup",
-      this.onTouchEnd
-    );
-  },
   computed: {
     activeSlides() {
       const { currentPage, breakpointSlidesPerPage, $children } = this.carousel;
       const activeSlides = [];
       const children = $children
         .filter(
-          child =>
-            child.$el && child.$el.className.indexOf("VueCarousel-slide") >= 0
+          (child) =>
+            child.$el && child.$el.className.includes("VueCarousel-slide")
         )
-        .map(child => child._uid);
+        .map((child) => child._uid);
 
       let i = 0;
       while (i < breakpointSlidesPerPage) {
@@ -56,15 +48,15 @@ export default {
     },
     /**
      * `isActive` describes whether a slide is visible
-     * @return {Boolean}
+     * @return {boolean}
      */
     isActive() {
-      return this.activeSlides.indexOf(this._uid) >= 0;
+      return this.activeSlides.includes(this._uid);
     },
     /**
      * `isCenter` describes whether a slide is in the center of all visible slides
      * if perPage is an even number, we quit
-     * @return {Boolean}
+     * @return {boolean}
      */
     isCenter() {
       const { breakpointSlidesPerPage } = this.carousel;
@@ -76,19 +68,29 @@ export default {
     },
     /**
      * `isAdjustableHeight` describes if the carousel adjusts its height to the active slide(s)
-     * @return {Boolean}
+     * @return {boolean}
      */
     isAdjustableHeight() {
       const { adjustableHeight } = this.carousel;
       return adjustableHeight;
+    },
+  },
+  mounted() {
+    if (!this.$isServer) {
+      this.$el.addEventListener("dragstart", (e) => e.preventDefault());
     }
+
+    this.$el.addEventListener(
+      this.carousel.isTouch ? "touchend" : "mouseup",
+      this.onTouchEnd
+    );
   },
   methods: {
     onTouchEnd(e) {
       /**
        * @event slideclick
        * @event slide-click
-       * @type {Object}
+       * @type {object}
        */
       const eventPosX =
         this.carousel.isTouch && e.changedTouches && e.changedTouches.length > 0
@@ -103,8 +105,8 @@ export default {
         this.$emit("slideclick", Object.assign({}, e.currentTarget.dataset));
         this.$emit("slide-click", Object.assign({}, e.currentTarget.dataset));
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

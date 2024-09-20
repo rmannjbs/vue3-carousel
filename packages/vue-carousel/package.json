@@ -1,5 +1,5 @@
 {
-  "name": "vue-carousel-repo",
+  "name": "vue-carousel",
   "version": "0.18.0",
   "description": "A flexible, responsive, touch-friendly carousel for Vue.js",
   "main": "dist/vue-carousel.min.js",
@@ -9,12 +9,11 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "npx nuxi prepare",
-    "build": "npm run build --workspace=vue-carousel",
+    "build": "vite build",
     "dev": "vue-play start --standalone",
     "dev:build": "vue-play build",
     "docs:build": "npm run build && rm -rf ./docs/public && mkdir ./docs/public/ && cd ./docs/public/ && git init && git remote add origin git@github.com:SSENSE/vue-carousel.git && git fetch && git checkout -f gh-pages && cd .. && npm install && ./node_modules/.bin/hexo clean && ./node_modules/.bin/hexo generate",
-    "lint": "prettier-eslint --write \"src/**/?(*.js|*.vue)\" || exit 1",
+    "lint": "prettier-eslint --write \"/**/?(*.js|*.vue)\" || exit 1",
     "precommit": "lint-staged && npm run test",
     "test": "npm run test:client",
     "test:client": "jest --config tests/client.jest.json",
@@ -38,17 +37,7 @@
     "url": ""
   },
   "homepage": "",
-  "devDependencies": {
-    "@nuxt/eslint": "^0.5.7",
-    "@nuxt/eslint-config": "^0.5.7",
-    "getplay": "^0.2.0",
-    "nuxt": "^3.13.2",
-    "tslib": "^2.7.0",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.6",
-    "vite-plugin-eslint": "^1.8.1",
-    "vitest": "^2.1.1",
-    "vue-play": "^3.2.1",
-    "vue-tsc": "^2.1.6"
+  "dependencies": {
+    "vue": "^3.0.0"
   }
 }

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="VueCarousel-navigation">
     <button
@@ -5,19 +6,21 @@
       aria-label="Previous page"
       :tabindex="canAdvanceBackward ? 0 : -1"
       class="VueCarousel-navigation-button VueCarousel-navigation-prev"
-      v-on:click.prevent="triggerPageAdvance('backward')"
-      v-bind:class="{ 'VueCarousel-navigation--disabled': !canAdvanceBackward }"
-      v-bind:style="`padding: ${clickTargetSize}px; margin-right: -${clickTargetSize}px;`"
-      v-html="prevLabel"></button>
+      :class="{ 'VueCarousel-navigation--disabled': !canAdvanceBackward }"
+      :style="`padding: ${clickTargetSize}px; margin-right: -${clickTargetSize}px;`"
+      @click.prevent="triggerPageAdvance('backward')"
+      v-html="prevLabel"
+    />
     <button
       type="button"
       aria-label="Next page"
       :tabindex="canAdvanceForward ? 0 : -1"
       class="VueCarousel-navigation-button VueCarousel-navigation-next"
-      v-on:click.prevent="triggerPageAdvance('forward')"
-      v-bind:class="{ 'VueCarousel-navigation--disabled': !canAdvanceForward }"
-      v-bind:style="`padding: ${clickTargetSize}px; margin-left: -${clickTargetSize}px;`"
-      v-html="nextLabel"></button>
+      :class="{ 'VueCarousel-navigation--disabled': !canAdvanceForward }"
+      :style="`padding: ${clickTargetSize}px; margin-left: -${clickTargetSize}px;`"
+      @click.prevent="triggerPageAdvance('forward')"
+      v-html="nextLabel"
+    />
   </div>
 </template>
 
@@ -31,36 +34,37 @@ export default {
      */
     clickTargetSize: {
       type: Number,
-      default: 8
+      default: 8,
     },
     /**
      * Text content of the navigation next button
      */
     nextLabel: {
       type: String,
-      default: "&#9654"
+      default: "&#9654",
     },
     /**
      * Text content of the navigation prev button
      */
     prevLabel: {
       type: String,
-      default: "&#9664"
-    }
+      default: "&#9664",
+    },
   },
+emits: ['navigationclick'],
   computed: {
     /**
-     * @return {Boolean} Can the slider move forward?
+     * @return {boolean} Can the slider move forward?
      */
     canAdvanceForward() {
       return this.carousel.canAdvanceForward || false;
     },
     /**
-     * @return {Boolean} Can the slider move backward?
+     * @return {boolean} Can the slider move backward?
      */
     canAdvanceBackward() {
       return this.carousel.canAdvanceBackward || false;
-    }
+    },
   },
   methods: {
     /**
@@ -74,8 +78,8 @@ export default {
        * @type {string}
        */
       this.$emit("navigationclick", direction);
-    }
-  }
+    },
+  },
 };
 </script>
 

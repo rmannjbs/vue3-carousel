@@ -2,7 +2,7 @@
   <div
     v-show="carousel.pageCount > 1"
     class="VueCarousel-pagination"
-    v-bind:class="{ [`VueCarousel-pagination--${paginationPositionModifierName}`]: paginationPositionModifierName }"
+    :class="{ [`VueCarousel-pagination--${paginationPositionModifierName}`]: paginationPositionModifierName }"
   >
     <div class="VueCarousel-dot-container" role="tablist" :style="dotContainerStyle">
       <button
@@ -15,10 +15,10 @@
         :value="getDotTitle(index)"
         :aria-label="getDotTitle(index)"
         :aria-selected="isCurrentDot(index) ? 'true' : 'false'"
-        v-bind:class="{ 'VueCarousel-dot--active': isCurrentDot(index) }"
-        v-on:click="goToPage(index)"
+        :class="{ 'VueCarousel-dot--active': isCurrentDot(index) }"
         :style="dotStyle(index)"
-      ></button>
+        @click="goToPage(index)"
+      />
     </div>
   </div>
 </template>
@@ -27,15 +27,16 @@
 export default {
   name: "pagination",
   inject: ["carousel"],
+emits: ['paginationclick'],
   computed: {
     paginationPositionModifierName() {
       const { paginationPosition } = this.carousel;
       // guard to add only required class modifiers
-      if (paginationPosition.indexOf("overlay") < 0) return;
+      if (!paginationPosition.includes("overlay")) return;
       return paginationPosition;
     },
     paginationPropertyBasedOnPosition() {
-      return this.carousel.paginationPosition.indexOf("top") >= 0
+      return this.carousel.paginationPosition.includes("top")
         ? "bottom"
         : "top";
     },
@@ -99,7 +100,7 @@ export default {
     /**
      * Control dots appear and disappear
      * @param {number} index - dot index
-     * @return {Object} - dot(buttn) style
+     * @return {object} - dot(buttn) style
      */
     dotStyle(index) {
       const { carousel } = this;
